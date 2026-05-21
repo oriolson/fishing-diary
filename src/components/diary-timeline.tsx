@@ -1,7 +1,11 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { getEntries, subscribeToEntries } from "@/lib/diary-storage";
+import {
+  getEntries,
+  getServerEntries,
+  subscribeToEntries,
+} from "@/lib/diary-storage";
 import type { DiaryEntry } from "@/lib/diary-types";
 
 export function DiaryTimeline() {
@@ -55,10 +59,6 @@ export function DiaryTimeline() {
 
 function useDiaryEntries() {
   return useSyncExternalStore(subscribeToEntries, getEntries, getServerEntries);
-}
-
-function getServerEntries(): DiaryEntry[] {
-  return [];
 }
 
 function describeCatch(entry: DiaryEntry) {

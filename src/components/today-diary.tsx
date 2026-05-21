@@ -16,8 +16,6 @@ export function TodayDiary() {
   const [species, setSpecies] = useState("");
   const [count, setCount] = useState(1);
   const [note, setNote] = useState("");
-  const [tug, setTug] = useState(false);
-  const [catchSuccessId, setCatchSuccessId] = useState(0);
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -39,12 +37,6 @@ export function TodayDiary() {
     };
 
     saveEntry(nextEntry);
-    setTug(true);
-    window.setTimeout(() => setTug(false), 800);
-
-    if (choice === "caught") {
-      setCatchSuccessId((currentId) => currentId + 1);
-    }
   }
 
   return (
@@ -65,7 +57,7 @@ export function TodayDiary() {
         onSubmit={handleSubmit}
         className="rounded-[2rem] border border-[color:var(--reed)]/15 bg-[color:var(--paper)] p-4 shadow-[0_24px_80px_color-mix(in_oklch,var(--mud)_12%,transparent)] sm:p-5"
       >
-        <BobberScene tug={tug} />
+        <BobberScene />
 
         <div className="mt-5 grid grid-cols-2 gap-3">
           <ChoiceButton
@@ -129,29 +121,13 @@ export function TodayDiary() {
           />
         </label>
 
-        <div className="relative mt-5">
-          <button
-            type="submit"
-            disabled={!choice}
-            className="w-full rounded-full bg-[color:var(--foreground)] px-5 py-4 font-semibold text-[color:var(--background)] transition hover:translate-y-[-1px] disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            Save today
-          </button>
-          {catchSuccessId > 0 ? (
-            <div
-              key={catchSuccessId}
-              aria-hidden
-              className="pointer-events-none absolute inset-0"
-            >
-              <span className="catch-success-text absolute inset-x-0 -top-8 text-center text-sm font-semibold text-[color:var(--float)]">
-                Nice catch!
-              </span>
-              <span className="catch-spark catch-spark-left absolute left-1/2 top-1/2" />
-              <span className="catch-spark catch-spark-center absolute left-1/2 top-1/2" />
-              <span className="catch-spark catch-spark-right absolute left-1/2 top-1/2" />
-            </div>
-          ) : null}
-        </div>
+        <button
+          type="submit"
+          disabled={!choice}
+          className="mt-5 w-full rounded-full bg-[color:var(--foreground)] px-5 py-4 font-semibold text-[color:var(--background)] transition hover:translate-y-[-1px] disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          Save today
+        </button>
 
         {todayEntry ? (
           <p className="mt-4 text-center text-sm text-[color:var(--reed)]">

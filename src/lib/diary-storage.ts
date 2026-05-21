@@ -2,20 +2,21 @@ import type { DiaryEntry } from "@/lib/diary-types";
 
 const STORAGE_KEY = "fishing-diary.entries";
 const STORAGE_EVENT = "fishing-diary.entries.changed";
+const EMPTY_ENTRIES: DiaryEntry[] = [];
 let cachedStoredValue: string | null = null;
-let cachedEntries: DiaryEntry[] = [];
+let cachedEntries: DiaryEntry[] = EMPTY_ENTRIES;
 
 export function getEntries(): DiaryEntry[] {
   if (typeof window === "undefined") {
-    return [];
+    return EMPTY_ENTRIES;
   }
 
   const storedValue = window.localStorage.getItem(STORAGE_KEY);
 
   if (!storedValue) {
     cachedStoredValue = null;
-    cachedEntries = [];
-    return [];
+    cachedEntries = EMPTY_ENTRIES;
+    return EMPTY_ENTRIES;
   }
 
   if (storedValue === cachedStoredValue) {
@@ -24,7 +25,9 @@ export function getEntries(): DiaryEntry[] {
 
   try {
     const parsedValue = JSON.parse(storedValue) as DiaryEntry[];
-    const sortedEntries = parsedValue.sort((a, b) => b.date.localeCompare(a.date));
+    const sortedEntries = parsedValue.sort((a, b) =>
+      b.date.localeCompare(a.date),
+    );
 
     cachedStoredValue = storedValue;
     cachedEntries = sortedEntries;
@@ -32,8 +35,12 @@ export function getEntries(): DiaryEntry[] {
     return sortedEntries;
   } catch (error) {
     console.warn("Could not read fishing diary entries.", error);
-    return [];
+    return EMPTY_ENTRIES;
   }
+}
+
+export function getServerEntries(): DiaryEntry[] {
+  return EMPTY_ENTRIES;
 }
 
 export function saveEntry(entry: DiaryEntry) {
